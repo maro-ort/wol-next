@@ -2,13 +2,16 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { NextPage } from 'next'
 import Head from 'next/head'
 
+import appsData from '../../public/apps.json'
 import clientsData from '../../public/clients.json'
 
+import AppList from 'components/AppList'
 import ClientList from '../components/ClientList'
 
 const Home: NextPage<{
+  apps: App[]
   initialClients: Client[]
-}> = ({ initialClients, ...props }) => {
+}> = ({ apps, initialClients, ...props }) => {
   const updateClientsInterval = useRef<NodeJS.Timeout | null>(null)
   const [clients, setClients] = useState<Client[]>(initialClients || [])
 
@@ -16,7 +19,7 @@ const Home: NextPage<{
     Promise.all(
       clients.map((client: Client) => {
         const { host } = client
-        return fetch('/api/ping', { method: 'POST', body: JSON.stringify({ host }) })
+        return fetch('/api/pingClient', { method: 'POST', body: JSON.stringify({ host }) })
           .then(r => r.json())
           .then(({ isActive }) => {
             client.isActive = isActive
@@ -56,13 +59,14 @@ const Home: NextPage<{
       </Head>
       <main>
         <ClientList clients={clients} updateClient={updateClient} updateClients={updateClients} />
+        <AppList apps={apps} />
       </main>
     </>
   )
 }
 
 export const getStaticProps = () => {
-  return { props: { initialClients: clientsData } }
+  return { props: { apps: appsData, initialClients: clientsData } }
 }
 
 export default Home

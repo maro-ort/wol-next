@@ -1,0 +1,61 @@
+.card {
+  border: 0.2em solid currentColor;
+  border-radius: 0.2em;
+  color: var(--color-light);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  transition: all 0.3s;
+
+  &__icons {
+    width: 100%;
+    position: relative;
+    padding-top: 100%;
+
+    .card__icon {
+      left: math.div($gutter, 2);
+      position: absolute;
+      top: math.div($gutter, 2);
+      transition: all 0.5s;
+      transform: scaleY(0);
+      transform-origin: top;
+      width: calc(100% - $gutter);
+
+      &.--visible {
+        max-height: 100%;
+        transform: scaleY(1);
+        // transform-origin: bottom;
+      }
+    }
+  }
+
+  &__name {
+    align-items: center;
+    background-color: currentColor;
+    display: flex;
+    font-size: 1.2em;
+    font-weight: bold;
+    justify-content: center;
+    padding: 0.2em;
+
+    &.--loading svg {
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(180deg);
+        }
+      }
+
+      display: block;
+      height: 1.2em;
+      animation: spin 1s infinite linear;
+    }
+
+    div {
+      color: var(--color-darker);
+    }
+  }
+}

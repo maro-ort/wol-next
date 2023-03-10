@@ -1,16 +1,8 @@
-#client-list {
+#app-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   grid-gap: $gutter * 2;
   grid-auto-flow: dense;
-
-  .cl__empty {
-    border: 0.2em solid currentColor;
-    border-radius: 0.2rem;
-    font-size: 1.2em;
-    padding: $gutter;
-    text-align: center;
-  }
 
   .card {
     &.--on {
@@ -18,19 +10,11 @@
     }
 
     &.--off {
-      color: var(--color-light);
+      color: var(--color-error);
     }
 
     &.--unknown {
       color: var(--color-light);
-    }
-
-    &.--error {
-      color: var(--color-error);
-    }
-
-    &.--waiting-input {
-      color: var(--color-accent-secondary);
     }
   }
 

@@ -1,11 +1,12 @@
 @use 'sass:math';
 
 @import './vars.scss';
+@import './card.scss';
+@import './app-list.scss';
 @import './client-list.scss';
 
 html,
-body,
-#root {
+body {
   background-color: var(--color-darker);
   color: var(--color-light);
   font-family: Arial, Helvetica, sans-serif;
@@ -13,4 +14,15 @@ body,
   height: 100vh;
   margin: 0;
   padding: $gutter;
+}
+main {
+  display: grid;
+  grid-gap: $gutter * 2;
+  grid-template-columns: 100%;
+  max-width: 600px;
+  margin: auto;
+}
+
+section {
+  margin: $gutter * 2 0;
 }

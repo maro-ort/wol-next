@@ -32,14 +32,19 @@ const Client: FC<{
     else if (!client.isActive) setCurrentStatus('off')
   }, [client])
 
-  const handleAskInput = useCallback(() => {
-    const clean = () => setCurrentStatus(currentStatus)
-    setCurrentStatus('waiting-input')
-    waitTimeout.current = setTimeout(clean, Timer.waitInputTimeout)
-    return () => {
-      clearTimeout(waitTimeout.current!)
-    }
-  }, [currentStatus, setCurrentStatus])
+  const handleAskInput = useCallback(
+    (status: Status) => {
+      if (status === 'on' && !client.canSus) return
+      if (status === 'off' && !client.canWake) return
+      const clean = () => setCurrentStatus(currentStatus)
+      setCurrentStatus('waiting-input')
+      waitTimeout.current = setTimeout(clean, Timer.waitInputTimeout)
+      return () => {
+        clearTimeout(waitTimeout.current!)
+      }
+    },
+    [currentStatus, setCurrentStatus]
+  )
 
   const handleClick = useCallback(() => {
     const { host, isActive } = client
@@ -84,7 +89,7 @@ const Client: FC<{
           const pingHost = () => {
             if (hasConnection || pingCounter >= Timer.pingMaxCount) return
             pingCounter++
-            fetch('/api/ping', { method: 'POST', body: JSON.stringify({ host }) })
+            fetch('/api/pingClient', { method: 'POST', body: JSON.stringify({ host }) })
               .then(r => r.json())
               .then(({ isActive }) => {
                 if (!isActive) {
@@ -107,65 +112,61 @@ const Client: FC<{
 
   return (
     <div
-      className={cx('cl__client', {
-        '--active': currentStatus === 'on',
-        '--waiting-input': currentStatus === 'waiting-input',
-        '--error': currentStatus === 'error',
-      })}
+      className={cx('card', `--${currentStatus}`)}
       onClick={() => {
         const fns = {
           'waiting-input': handleClick,
-          on: handleAskInput,
-          off: handleAskInput,
+          on: () => handleAskInput('on'),
+          off: () => handleAskInput('off'),
         } as Record<Status, any>
         if (currentStatus in fns) fns?.[currentStatus]?.()
       }}
     >
-      <div className="cl__icons">
+      <div className="card__icons">
         <div
-          className={cx('cl__unknown icon', {
+          className={cx('icon-unknown card__icon', {
             '--visible': currentStatus === 'unknown',
           })}
         >
           <QuestionSvg />
         </div>
         <div
-          className={cx('cl__error icon', {
+          className={cx('card__icon', {
             '--visible': currentStatus === 'error',
           })}
         >
           <XSvg />
         </div>
         <div
-          className={cx('cl__on icon', {
+          className={cx('card__icon', {
             '--visible': currentStatus === 'on',
           })}
         >
           <SunSvg />
         </div>
         <div
-          className={cx('cl__off icon', {
+          className={cx('card__icon', {
             '--visible': currentStatus === 'off',
           })}
         >
           <MoonSvg />
         </div>
         <div
-          className={cx('cl__power icon', {
+          className={cx('icon-power card__icon', {
             '--visible': currentStatus === 'waiting-input' && !client.isActive,
           })}
         >
           <EyeSvg />
         </div>
         <div
-          className={cx('cl__power-off icon', {
+          className={cx('icon-power-off card__icon', {
             '--visible': currentStatus === 'waiting-input' && client.isActive,
           })}
         >
           <EyeOffSvg />
         </div>
       </div>
-      <div className={cx('cl__name', { '--loading': isLoading })}>
+      <div className={cx('card__name', { '--loading': isLoading })}>
         {isLoading ? (
           <div>
             <RefreshSvg />

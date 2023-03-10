@@ -9,8 +9,13 @@ const run = (cmd: string, params?: string[]) => {
   })
 }
 
-export const ping = (host: string): Promise<boolean> => {
-  return run(`./src/scripts/ping.sh ${host}`)
+export const pingClient = (host: string): Promise<boolean> => {
+  return run(`./src/scripts/ping-client.sh ${host}`)
+    .then(sent => true)
+    .catch(() => false)
+}
+export const pingUrl = (url: string): Promise<boolean> => {
+  return run(`./src/scripts/ping-url.sh ${url}`)
     .then(sent => true)
     .catch(() => false)
 }
