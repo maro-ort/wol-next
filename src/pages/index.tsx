@@ -61,8 +61,8 @@ const Home: NextPage<{
   )
 }
 
-Home.getInitialProps = () => {
-  return { initialClients: clientsData }
+export const getStaticProps = () => {
+  return { props: { initialClients: clientsData } }
 }
 
 export default Home
