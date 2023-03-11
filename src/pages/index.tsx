@@ -47,7 +47,7 @@ const Home: NextPage<{
     return () => {
       clearInterval(updateClientsInterval.current!)
     }
-  }, [])
+  }, [updateClients])
 
   return (
     <>

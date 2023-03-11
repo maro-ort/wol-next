@@ -3,7 +3,7 @@ import { pingClient, pingUrl, suspend, wol } from 'utils'
 
 type Response = { isActive: boolean } | { sent: boolean }
 
-export default async (req: NextApiRequest, res: NextApiResponse<Response>) => {
+const action = async (req: NextApiRequest, res: NextApiResponse<Response>) => {
   const { query, body } = req
   const { action } = query
   const { host, mac } = JSON.parse(body)
@@ -20,3 +20,5 @@ export default async (req: NextApiRequest, res: NextApiResponse<Response>) => {
     res.status(404)
   }
 }
+
+export default action

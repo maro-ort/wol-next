@@ -43,7 +43,7 @@ const Client: FC<{
         clearTimeout(waitTimeout.current!)
       }
     },
-    [currentStatus, setCurrentStatus]
+    [client.canSus, client.canWake, currentStatus]
   )
 
   const handleClick = useCallback(() => {
@@ -108,7 +108,7 @@ const Client: FC<{
           pingHost()
         })
     }
-  }, [currentStatus, setCurrentStatus, setIsLoading])
+  }, [client, updateClients])
 
   return (
     <div

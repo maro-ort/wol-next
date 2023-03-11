@@ -12,13 +12,15 @@ enum Timer {
 const App: FC<{ app: App }> = ({ app }) => {
   const [currentStatus, setCurrentStatus] = useState<Status>('unknown')
 
-  const updateStatus = () => {
+  const updateStatus = useCallback(() => {
     fetch('/api/pingUrl', { method: 'POST', body: JSON.stringify({ host: app.url }) })
       .then(r => r.json())
       .then(({ isActive }) => {
         setCurrentStatus(isActive ? 'on' : 'off')
       })
-  }
+  }, [app.url])
+
+  const open = useCallback(() => currentStatus === 'on' && window.open(app.url, '__blank'), [app.url, currentStatus])
 
   useEffect(() => {
     updateStatus()
@@ -26,9 +28,7 @@ const App: FC<{ app: App }> = ({ app }) => {
     return () => {
       clearInterval(updateStatusInterval)
     }
-  }, [])
-
-  const open = useCallback(() => currentStatus === 'on' && window.open(app.url, '__blank'), [currentStatus])
+  }, [updateStatus])
 
   return (
     <div className={cx('card', `--${currentStatus}`)} onClick={open}>
